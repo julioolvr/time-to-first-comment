@@ -1,6 +1,4 @@
 source 'https://rubygems.org'
 
-gem 'octokit'
-gem 'pry'
-gem 'chronic_duration'
-gem 'rubocop'
+# Specify your gem's dependencies in time_to_first_comment.gemspec
+gemspec
