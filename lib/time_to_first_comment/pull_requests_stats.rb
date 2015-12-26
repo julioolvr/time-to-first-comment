@@ -22,13 +22,22 @@ module TimeToFirstComment
       pulls = client.pulls(repo, state: :all)
 
       pulls.map do |pull|
-        issue_comments = pull.rels[:comments].get.data
-        review_comments = pull.rels[:review_comments].get.data
-        first_comment = (issue_comments + review_comments).sort_by(&:created_at).first
-        seconds = first_comment.created_at - pull.created_at if first_comment
-
-        [pull, seconds]
+        [pull, seconds_until_first_comment(pull)]
       end
+    end
+
+    private
+
+    # Given a Pull Request ({Sawyer::Resource}) it returns the number of seconds until the first comment happened,
+    # or `nil` if there were none.
+    #
+    # @param pull [Sawyer::Resource] A Pull Request from {Octokit}
+    # @return [Fixnum] The number of seconds until that PRs first comment, or `nil`.
+    def seconds_until_first_comment(pull)
+      issue_comments = pull.rels[:comments].get.data
+      review_comments = pull.rels[:review_comments].get.data
+      first_comment = (issue_comments + review_comments).sort_by(&:created_at).first
+      first_comment.created_at - pull.created_at if first_comment
     end
   end
 end
