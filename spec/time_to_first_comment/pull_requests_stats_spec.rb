@@ -3,9 +3,9 @@ require 'spec_helper'
 describe TimeToFirstComment::PullRequestsStats do
   describe '#time_to_first_comment' do
     let(:stats) { TimeToFirstComment::PullRequestsStats.new(client) }
-    let(:client) { double('Octokit::Client', pulls: [pull]) }
-    let(:pull) { double(rels: comments, created_at: Time.now - 12_000) }
-    let(:comments) { { comments: issue_comments_rel, review_comments: review_comments_rel } }
+    let(:client) { double('Octokit::Client', search_issues: { items: [pull] }, review_comments: review_comments) }
+    let(:pull) { double(number: 1, rels: comments, created_at: Time.now - 12_000) }
+    let(:comments) { { comments: issue_comments_rel } }
     let(:issue_comments_rel) { double(get: double(data: issue_comments)) }
     let(:review_comments_rel) { double(get: double(data: review_comments)) }
 

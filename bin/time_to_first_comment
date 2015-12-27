@@ -9,8 +9,8 @@ stats = TimeToFirstComment::PullRequestsStats.new(Octokit::Client.new)
 
 stats.time_to_first_comment(repo).each do |pull, seconds|
   if seconds
-    puts %(#{ChronicDuration.output(seconds)} until first comment for: "#{pull.title}" )
+    puts %(#{ChronicDuration.output(seconds)} until first comment for: "#{pull.title}")
   else
-    puts %(No comments yet for pull request: "#{pull.title}", )
+    puts %(No comments yet for pull request: "#{pull.title}")
   end
 end
