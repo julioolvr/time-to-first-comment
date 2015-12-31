@@ -7,8 +7,10 @@ module TimeToFirstComment
     def respond(arguments)
       opts = Slop.parse(arguments) do
         on :r, :repo=, 'Repository to look for PRs on'
-        on :f, :from=, 'PRs created since this date - YYYY-MM-DD', argument: :optional
-        on :t, :to=, 'PRs created up to this date - YYYY-MM-DD', argument: :optional
+        on :from=, 'PRs created since this date - YYYY-MM-DD', argument: :optional
+        on :to=, 'PRs created up to this date - YYYY-MM-DD', argument: :optional
+        on :e, :endpoint=, 'Custom API endpoint to connect to Github Enterprise', argument: :optional
+        on :t, :token=, 'Access Token to query Github as a specific user', argument: :optional
       end
 
       unless opts.map(&:value).compact.any?
@@ -22,7 +24,7 @@ module TimeToFirstComment
         return
       end
 
-      stats = TimeToFirstComment::PullRequestsStats.new(Octokit::Client.new)
+      stats = TimeToFirstComment::PullRequestsStats.new(octokit_client(endpoint: opts[:endpoint], token: opts[:token]))
 
       stats.time_to_first_comment(opts[:repo], from: opts[:from], to: opts[:to]).each do |pull, seconds|
         if seconds
@@ -31,6 +33,15 @@ module TimeToFirstComment
           puts %(#{pull.title}: No comments yet.)
         end
       end
+    end
+
+    private
+
+    def octokit_client(endpoint:, token:)
+      options = {}
+      options[:api_endpoint] = endpoint if endpoint
+      options[:access_token] = token if token
+      Octokit::Client.new(options)
     end
   end
 end

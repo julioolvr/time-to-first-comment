@@ -38,5 +38,6 @@ describe TimeToFirstComment::Cli do
     end
 
     it 'outputs the time to first comment for the PRs'
+    it 'uses the given endpoint and token to connect to Github'
   end
 end
