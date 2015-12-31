@@ -26,9 +26,9 @@ module TimeToFirstComment
 
       stats.time_to_first_comment(opts[:repo], from: opts[:from], to: opts[:to]).each do |pull, seconds|
         if seconds
-          puts %(#{ChronicDuration.output(seconds)} until first comment for: "#{pull.title}")
+          puts %(#{pull.title}: #{ChronicDuration.output(seconds)} until first comment.)
         else
-          puts %(No comments yet for pull request: "#{pull.title}")
+          puts %(#{pull.title}: No comments yet.)
         end
       end
     end
