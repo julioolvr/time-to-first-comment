@@ -1,16 +1,5 @@
 #!/usr/bin/env ruby
 
 require 'time_to_first_comment'
-require 'octokit'
-require 'chronic_duration'
 
-repo = 'julioolvr/count-to-1000'
-stats = TimeToFirstComment::PullRequestsStats.new(Octokit::Client.new)
-
-stats.time_to_first_comment(repo, from: '2015-07-01', to: '2015-07-28').each do |pull, seconds|
-  if seconds
-    puts %(#{ChronicDuration.output(seconds)} until first comment for: "#{pull.title}")
-  else
-    puts %(No comments yet for pull request: "#{pull.title}")
-  end
-end
+TimeToFirstComment::Cli.new.respond(ARGV)
